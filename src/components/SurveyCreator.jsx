@@ -13,6 +13,7 @@ const SurveyCreator = () => {
   const [questions, setQuestions] = useState([{ question: "", options: [] }]);
   const [surveyName, setSurveyName] = useState("");
   const [surveyDescription, setSurveyDescription] = useState("");
+  //TODO: Eliminar responses ya que no se usa
   const [responses, setResponses] = useState([]);
   
   const handleNameChange = (value) => {

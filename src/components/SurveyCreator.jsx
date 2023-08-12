@@ -10,12 +10,11 @@ import {
 } from "@chakra-ui/react";
 
 const SurveyCreator = () => {
-  const [questions, setQuestions] = useState([{ question: "", options: [] }]);
+  const [questions, setQuestions] = useState([{ question: "", type: "SINGLE_CHOICE", options: [] }]);
+  const [selectedType, setSelectedType] = useState("SINGLE_CHOICE"); // Selected question type
   const [surveyName, setSurveyName] = useState("");
   const [surveyDescription, setSurveyDescription] = useState("");
-  //TODO: Eliminar responses ya que no se usa
-  const [responses, setResponses] = useState([]);
-  
+
   const handleNameChange = (value) => {
     setSurveyName(value);
   };
@@ -25,7 +24,7 @@ const SurveyCreator = () => {
   };
 
   const handleAddQuestion = () => {
-    setQuestions([...questions, { question: "", options: [] }]);
+    setQuestions([...questions, { question: "", type: selectedType, options: [] }]);
   };
 
   const handleQuestionChange = (index, value) => {
@@ -57,14 +56,8 @@ const SurveyCreator = () => {
           type: questionData.type,
           options: questionData.options,
         })),
-        responses: responses.map((response) => ({
-          id: response.id, // Assign a unique identifier for each response
-          questionId: response.questionId,
-          answer: response.answer,
-        })),
-
       };
-    
+
       const response = await fetch("http://localhost:3001/api/v1/save", {
         method: "POST",
         headers: {
@@ -72,10 +65,8 @@ const SurveyCreator = () => {
         },
         body: JSON.stringify(surveyData),
       });
-  
+
       if (response.ok) {
-        // Survey data saved successfully
-        // You might want to show a success message or redirect the user
         console.log("Survey data saved successfully!");
       } else {
         console.error("Error saving survey data:", response.statusText);
@@ -103,6 +94,38 @@ const SurveyCreator = () => {
           onChange={(e) => handleDescriptionChange(e.target.value)}
         />
       </FormControl>
+
+      <FormControl mt={4}>
+        <FormLabel>Question Type:</FormLabel>
+        <label>
+          <input
+            type="radio"
+            value="SINGLE_CHOICE"
+            checked={selectedType === "SINGLE_CHOICE"}
+            onChange={() => setSelectedType("SINGLE_CHOICE")}
+          />
+          Single Choice
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="MULTIPLE_CHOICE"
+            checked={selectedType === "MULTIPLE_CHOICE"}
+            onChange={() => setSelectedType("MULTIPLE_CHOICE")}
+          />
+          Multiple Choice
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="OPEN_ENDED"
+            checked={selectedType === "OPEN_ENDED"}
+            onChange={() => setSelectedType("OPEN_ENDED")}
+          />
+          Open-ended
+        </label>
+      </FormControl>
+
       {questions.map((questionData, questionIndex) => (
         <FormControl key={questionIndex}>
           <FormLabel>Question {questionIndex + 1}:</FormLabel>

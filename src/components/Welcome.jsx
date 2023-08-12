@@ -12,6 +12,7 @@ import { RiBuilding4Line, RiCloseLine, RiMenu2Fill } from "react-icons/ri";
 import MapLeaf from "./MapLeaft";
 import Data from "./Data";
 import Encuesta from "./SurveyCreator";
+import SurveyDetails from "./SurveyDetails";
 import { AuthContext } from "../context/AuthContext";
 import useProfile from "../hooks/useProfile";
 import { logout } from "../services/auth";
@@ -104,6 +105,15 @@ const Welcome = () => {
             <Button 
             color={"white"} 
             variant="ghost" 
+            onClick={() => handleMenuClick("encuestaInfo")} 
+            mr="2">
+              Encuesta-info
+            </Button>
+          </ListItem>
+          <ListItem>
+            <Button 
+            color={"white"} 
+            variant="ghost" 
             onClick={() => handleMenuClick("encuesta")} 
             mr="2">
               Encuesta
@@ -125,6 +135,7 @@ const Welcome = () => {
         {currentSection === "mapa" && <MapLeaf />}
         {currentSection === "data" && <Data />}
         {currentSection === "encuesta"  && <Encuesta />}
+        {currentSection === "encuestaInfo"  && <SurveyDetails />}
       </Box>
 
       <Button

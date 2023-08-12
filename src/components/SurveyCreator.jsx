@@ -7,6 +7,7 @@ import {
   Textarea,
   Input,
   Stack,
+  Select,
 } from "@chakra-ui/react";
 
 const SurveyCreator = () => {
@@ -42,6 +43,12 @@ const SurveyCreator = () => {
   const handleOptionChange = (questionIndex, optionIndex, value) => {
     const updatedQuestions = [...questions];
     updatedQuestions[questionIndex].options[optionIndex] = value;
+    setQuestions(updatedQuestions);
+  };
+
+  const handleQuestionTypeChange = (questionIndex, value) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[questionIndex].type = value;
     setQuestions(updatedQuestions);
   };
 
@@ -95,36 +102,6 @@ const SurveyCreator = () => {
         />
       </FormControl>
 
-      <FormControl mt={4}>
-        <FormLabel>Question Type:</FormLabel>
-        <label>
-          <input
-            type="radio"
-            value="SINGLE_CHOICE"
-            checked={selectedType === "SINGLE_CHOICE"}
-            onChange={() => setSelectedType("SINGLE_CHOICE")}
-          />
-          Single Choice
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="MULTIPLE_CHOICE"
-            checked={selectedType === "MULTIPLE_CHOICE"}
-            onChange={() => setSelectedType("MULTIPLE_CHOICE")}
-          />
-          Multiple Choice
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="OPEN_ENDED"
-            checked={selectedType === "OPEN_ENDED"}
-            onChange={() => setSelectedType("OPEN_ENDED")}
-          />
-          Open-ended
-        </label>
-      </FormControl>
 
       {questions.map((questionData, questionIndex) => (
         <FormControl key={questionIndex}>
@@ -136,28 +113,44 @@ const SurveyCreator = () => {
               handleQuestionChange(questionIndex, e.target.value)
             }
           />
-          <FormLabel>Options:</FormLabel>
-          <Stack spacing={2}>
-            {questionData.options.map((option, optionIndex) => (
-              <Input
-                key={optionIndex}
-                type="text"
-                value={option}
-                onChange={(e) =>
-                  handleOptionChange(questionIndex, optionIndex, e.target.value)
-                }
-              />
-            ))}
-            <Button
-              mt={2}
-              size="sm"
-              onClick={() => handleAddOption(questionIndex)}
-            >
-              Add Option
-            </Button>
-          </Stack>
+          <FormLabel>Question Type:</FormLabel>
+          <Select
+            value={questionData.type}
+            onChange={(e) =>
+              handleQuestionTypeChange(questionIndex, e.target.value)
+            }
+          >
+            <option value="SINGLE_CHOICE">Single Choice</option>
+            <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+            <option value="OPEN_ENDED">Open-ended</option>
+          </Select>
+          {questionData.type !== "OPEN_ENDED" && (
+            <div>
+              <FormLabel>Options:</FormLabel>
+              <Stack spacing={2}>
+                {questionData.options.map((option, optionIndex) => (
+                  <Input
+                    key={optionIndex}
+                    type="text"
+                    value={option}
+                    onChange={(e) =>
+                      handleOptionChange(questionIndex, optionIndex, e.target.value)
+                    }
+                  />
+                ))}
+                <Button
+                  mt={2}
+                  size="sm"
+                  onClick={() => handleAddOption(questionIndex)}
+                >
+                  Add Option
+                </Button>
+              </Stack>
+            </div>
+          )}
         </FormControl>
       ))}
+
 
       <Button mt={4} onClick={handleAddQuestion}>
         Add Question

@@ -11,7 +11,9 @@ import {
 } from "@chakra-ui/react";
 
 const SurveyCreator = () => {
-  const [questions, setQuestions] = useState([{ question: "", type: "SINGLE_CHOICE", options: [] }]);
+  const [questions, setQuestions] = useState([
+    { question: "", type: "SINGLE_CHOICE", options: [] },
+  ]);
   const [selectedType, setSelectedType] = useState("SINGLE_CHOICE"); // Selected question type
   const [surveyName, setSurveyName] = useState("");
   const [surveyDescription, setSurveyDescription] = useState("");
@@ -25,7 +27,10 @@ const SurveyCreator = () => {
   };
 
   const handleAddQuestion = () => {
-    setQuestions([...questions, { question: "", type: selectedType, options: [] }]);
+    setQuestions([
+      ...questions,
+      { question: "", type: selectedType, options: [] },
+    ]);
   };
 
   const handleQuestionChange = (index, value) => {
@@ -65,13 +70,16 @@ const SurveyCreator = () => {
         })),
       };
 
-      const response = await fetch("http://localhost:3001/api/v1/save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(surveyData),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_PUBLIC_DATA_ALL}/save`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(surveyData),
+        }
+      );
 
       if (response.ok) {
         console.log("Survey data saved successfully!");
@@ -101,7 +109,6 @@ const SurveyCreator = () => {
           onChange={(e) => handleDescriptionChange(e.target.value)}
         />
       </FormControl>
-
 
       {questions.map((questionData, questionIndex) => (
         <FormControl key={questionIndex}>
@@ -134,7 +141,11 @@ const SurveyCreator = () => {
                     type="text"
                     value={option}
                     onChange={(e) =>
-                      handleOptionChange(questionIndex, optionIndex, e.target.value)
+                      handleOptionChange(
+                        questionIndex,
+                        optionIndex,
+                        e.target.value
+                      )
                     }
                   />
                 ))}
@@ -150,7 +161,6 @@ const SurveyCreator = () => {
           )}
         </FormControl>
       ))}
-
 
       <Button mt={4} onClick={handleAddQuestion}>
         Add Question

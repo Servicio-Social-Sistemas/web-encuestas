@@ -12,6 +12,7 @@
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
     "@supabase/supabase-js": "^1.30.6",
+    "axios": "^1.4.0",
     "chart.js": "4.3.3",
     "leaflet": "1.9.4",
     "papaparse": "^5.4.1",

@@ -1,3 +1,4 @@
+import { Navigate } from 'react-router-dom'
 import { supabase } from '../api/config'
 
 export const signInWithEmail = async (email, password) => {

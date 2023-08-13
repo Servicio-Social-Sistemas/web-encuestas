@@ -17,6 +17,7 @@ import { AuthContext } from "../context/AuthContext";
 import useProfile from "../hooks/useProfile";
 import { logout } from "../services/auth";
 import SurveyList from "./SurveyViewer/SurveyList";
+import SurveyCreator from "./SurveyCreator";
 
 const Welcome = () => {
   const [currentSection, setCurrentSection] = useState("encuesta");
@@ -108,10 +109,10 @@ const Welcome = () => {
             <Button
               color={"white"}
               variant="ghost"
-              onClick={() => handleMenuClick("encuestaInfo")}
+              onClick={() => handleMenuClick("crearEncuesta")}
               mr="2"
             >
-              Encuesta-info
+              Crear Encuesta
             </Button>
           </ListItem>
           <ListItem>
@@ -140,7 +141,7 @@ const Welcome = () => {
         {currentSection === "mapa" && <MapLeaf />}
         {currentSection === "data" && <Data />}
         {currentSection === "encuesta" && <SurveyList />}
-        {currentSection === "encuestaInfo" && <SurveyDetails />}
+        {currentSection === "crearEncuesta" && <SurveyCreator />}
       </Box>
 
       <Button

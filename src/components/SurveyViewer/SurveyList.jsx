@@ -1,28 +1,46 @@
 import { Box, Flex, Text, Button } from "@chakra-ui/react";
-import { RiLinkM } from "react-icons/ri";
+import toast from "react-hot-toast";
+import { RiLinkM, RiDeleteBin5Line } from "react-icons/ri";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const SurveyList = () => {
   const [surveys, setSurveys] = useState([]);
 
   useEffect(() => {
-    const fetchSurveys = async () => {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_PUBLIC_DATA}/all`);
-        if (response.ok) {
-          const data = await response.json();
-          setSurveys(data);
-        } else {
-          console.error("Error fetching surveys:", response.statusText);
-        }
-      } catch (error) {
-        console.error("An error occurred:", error);
-      }
-    };
-
     fetchSurveys();
   }, []);
+
+  const fetchSurveys = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_DATA}/all`);
+      if (response.ok) {
+        const data = await response.json();
+        setSurveys(data);
+      } else {
+        console.error("Error fetching surveys:", response.statusText);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+
+  const handleDeleteSurver = async (surveyId) => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_PUBLIC_DATA}/delete/${surveyId}`
+      );
+
+      if (response.status === 200) {
+        fetchSurveys();
+      }
+      fetchSurveys();
+      toast.success("Encuestas eliminada con exito");
+    } catch (error) {
+      toast.error("Error al eliminar la encuesta");
+    }
+  };
 
   return (
     <Flex mt={16} flexDir={"column"} justify={"center"}>
@@ -70,10 +88,21 @@ const SurveyList = () => {
             <Text my={4} color={"blue.700"}>
               Descripción: {survey.description}
             </Text>
-            <Button gap={2}>
-              <Link to={`/survey/${survey.id}`}>Link Encuesta</Link>
-              <RiLinkM />
-            </Button>
+            <Flex justify={"space-between"}>
+              <Button gap={2}>
+                <Link to={`/survey/${survey.id}`}>Link Encuesta</Link>
+                <RiLinkM />
+              </Button>
+              <Button
+                gap={2}
+                bg={"red.500"}
+                color={"white"}
+                fontWeight={"bold"}
+                onClick={() => handleDeleteSurver(survey.id)}
+              >
+                <RiDeleteBin5Line />
+              </Button>
+            </Flex>
           </Box>
         ))}
       </Flex>

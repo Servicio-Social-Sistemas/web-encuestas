@@ -16,9 +16,11 @@ import {
 const SurveyViewer = () => {
   const [surveyData, setSurveyData] = useState(null);
   const [userResponses, setUserResponses] = useState({});
-  const [userPosition, setUserPosition] = useState(null); 
+  const [userPosition, setUserPosition] = useState(null);
 
   let { surveyId } = useParams();
+
+  console.log(surveyData);
 
   useEffect(() => {
     const fetchSurveyData = async () => {
@@ -84,11 +86,15 @@ const SurveyViewer = () => {
       console.log("User Survey Responses:", userSurveyResponses);
 
       const response = await axios.post(
-        `http://localhost:3001/api/v1/submit/${surveyId}`,
-        { surveyId: surveyId,  responses: userSurveyResponses, location: userPosition }
+        `${import.meta.env.VITE_PUBLIC_DATA}/submit/${surveyId}`,
+        {
+          surveyId: surveyId,
+          responses: userSurveyResponses,
+          location: userPosition,
+        }
       );
 
-      console
+      console;
 
       if (response.status === 200) {
         console.log("Respuestas guardadas exitosamente!");

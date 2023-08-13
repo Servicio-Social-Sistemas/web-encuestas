@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
       const user = supabase.auth.user();
       setUser(user);
 
-      const allowedRoutes = ["/createsurvey"]; // Agrega aquí las rutas permitidas sin autenticación
+      const allowedRoutes = ["/createsurvey", "/survey/:surveyId"]; // Agrega aquí las rutas permitidas sin autenticación
 
       if (!user) {
         if (!allowedRoutes.includes(window.location.pathname)) {

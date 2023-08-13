@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import {
   Box,
   Button,
@@ -7,12 +8,16 @@ import {
   Textarea,
   Input,
   Stack,
+  Flex,
   Select,
+  Toast,
 } from "@chakra-ui/react";
 
 const SurveyCreator = () => {
-  const [questions, setQuestions] = useState([{ question: "", type: "SINGLE_CHOICE", options: [] }]);
-  const [selectedType, setSelectedType] = useState("SINGLE_CHOICE"); 
+  const [questions, setQuestions] = useState([
+    { question: "", type: "SINGLE_CHOICE", options: [] },
+  ]);
+  const [selectedType, setSelectedType] = useState("SINGLE_CHOICE"); // Selected question type
   const [surveyName, setSurveyName] = useState("");
   const [surveyDescription, setSurveyDescription] = useState("");
 
@@ -25,7 +30,10 @@ const SurveyCreator = () => {
   };
 
   const handleAddQuestion = () => {
-    setQuestions([...questions, { question: "", type: selectedType, options: [] }]);
+    setQuestions([
+      ...questions,
+      { question: "", type: selectedType, options: [] },
+    ]);
   };
 
   const handleQuestionChange = (index, value) => {
@@ -65,7 +73,7 @@ const SurveyCreator = () => {
         })),
       };
 
-      const response = await fetch("http://localhost:3001/api/v1/save", {
+      const response = await fetch(`${import.meta.env.VITE_PUBLIC_DATA}/save`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,92 +82,108 @@ const SurveyCreator = () => {
       });
 
       if (response.ok) {
-        console.log("Survey data saved successfully!");
+        toast.success("Survey data saved successfully!");
+        // toast.promise(response, {
+        //   loading: "Guardando la encuesta...",
+        //   success: "Encuesta guardada exitosamente!",
+        //   error: "Error al guardar la encuesta",
+        // });
       } else {
-        console.error("Error saving survey data:", response.statusText);
+        toast.error("Error saving survey data:", response.statusText);
+        console.log(error);
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      toast.error("An error occurred:", error);
     }
   };
 
   return (
-    <Box p={4}>
-      <FormControl>
-        <FormLabel>Survey Name:</FormLabel>
-        <Input
-          type="text"
-          value={surveyName}
-          onChange={(e) => handleNameChange(e.target.value)}
-        />
-      </FormControl>
-
-      <FormControl mt={4}>
-        <FormLabel>Survey Description:</FormLabel>
-        <Textarea
-          value={surveyDescription}
-          onChange={(e) => handleDescriptionChange(e.target.value)}
-        />
-      </FormControl>
-
-
-      {questions.map((questionData, questionIndex) => (
-        <FormControl key={questionIndex}>
-          <FormLabel>Question {questionIndex + 1}:</FormLabel>
+    <Flex align={"center"} justify={"center"}>
+      <Box p={4}>
+        <FormControl>
+          <FormLabel
+            fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+            fontWeight={"bold"}
+          >
+            Nombre de la encuesta:
+          </FormLabel>
           <Input
             type="text"
-            value={questionData.question}
-            onChange={(e) =>
-              handleQuestionChange(questionIndex, e.target.value)
-            }
+            value={surveyName}
+            onChange={(e) => handleNameChange(e.target.value)}
           />
-          <FormLabel>Question Type:</FormLabel>
-          <Select
-            value={questionData.type}
-            onChange={(e) =>
-              handleQuestionTypeChange(questionIndex, e.target.value)
-            }
-          >
-            <option value="SINGLE_CHOICE">Single Choice</option>
-            <option value="MULTIPLE_CHOICE">Multiple Choice</option>
-            <option value="OPEN_ENDED">Open-ended</option>
-          </Select>
-          {questionData.type !== "OPEN_ENDED" && (
-            <div>
-              <FormLabel>Options:</FormLabel>
-              <Stack spacing={2}>
-                {questionData.options.map((option, optionIndex) => (
-                  <Input
-                    key={optionIndex}
-                    type="text"
-                    value={option}
-                    onChange={(e) =>
-                      handleOptionChange(questionIndex, optionIndex, e.target.value)
-                    }
-                  />
-                ))}
-                <Button
-                  mt={2}
-                  size="sm"
-                  onClick={() => handleAddOption(questionIndex)}
-                >
-                  Add Option
-                </Button>
-              </Stack>
-            </div>
-          )}
         </FormControl>
-      ))}
 
+        <FormControl my={4}>
+          <FormLabel fontWeight={"bold"}>Descripción:</FormLabel>
+          <Textarea
+            value={surveyDescription}
+            onChange={(e) => handleDescriptionChange(e.target.value)}
+          />
+        </FormControl>
 
-      <Button mt={4} onClick={handleAddQuestion}>
-        Add Question
-      </Button>
+        {questions.map((questionData, questionIndex) => (
+          <FormControl mt={4} key={questionIndex}>
+            <FormLabel>Pregunta {questionIndex + 1}:</FormLabel>
+            <Input
+              type="text"
+              value={questionData.question}
+              onChange={(e) =>
+                handleQuestionChange(questionIndex, e.target.value)
+              }
+            />
+            <FormLabel fontWeight={"bold"}>Tipo de pregunta:</FormLabel>
+            <Select
+              value={questionData.type}
+              onChange={(e) =>
+                handleQuestionTypeChange(questionIndex, e.target.value)
+              }
+            >
+              <option value="SINGLE_CHOICE">Single Choice</option>
+              <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+              <option value="OPEN_ENDED">Open-ended</option>
+            </Select>
+            {questionData.type !== "OPEN_ENDED" && (
+              <div>
+                <FormLabel>Options:</FormLabel>
+                <Stack spacing={2}>
+                  {questionData.options.map((option, optionIndex) => (
+                    <Input
+                      key={optionIndex}
+                      type="text"
+                      value={option}
+                      onChange={(e) =>
+                        handleOptionChange(
+                          questionIndex,
+                          optionIndex,
+                          e.target.value
+                        )
+                      }
+                    />
+                  ))}
+                  <Button
+                    mt={2}
+                    size="sm"
+                    onClick={() => handleAddOption(questionIndex)}
+                  >
+                    Add Option
+                  </Button>
+                </Stack>
+              </div>
+            )}
+          </FormControl>
+        ))}
 
-      <Button mt={4} colorScheme="blue" onClick={handleCreateSurvey}>
-        Save Survey
-      </Button>
-    </Box>
+        <Button mt={4} onClick={handleAddQuestion}>
+          Add Question
+        </Button>
+
+        <Button mt={4} colorScheme="blue" onClick={handleCreateSurvey}>
+          Save Survey
+        </Button>
+      </Box>
+      <Toaster />
+    </Flex>
   );
 };
 

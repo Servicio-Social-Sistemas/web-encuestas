@@ -16,6 +16,7 @@ import SurveyDetails from "./SurveyDetails";
 import { AuthContext } from "../context/AuthContext";
 import useProfile from "../hooks/useProfile";
 import { logout } from "../services/auth";
+import { Navigate } from "react-router-dom";
 
 const Welcome = () => {
   const [currentSection, setCurrentSection] = useState("mapa");
@@ -23,7 +24,9 @@ const Welcome = () => {
 
   const userProfile = useProfile();
 
-  const handleLogout = async () => await logout();
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const handleMenuClick = (section) => {
     setCurrentSection(section);
@@ -102,21 +105,23 @@ const Welcome = () => {
             </Button>
           </ListItem>
           <ListItem>
-            <Button 
-            color={"white"} 
-            variant="ghost" 
-            onClick={() => handleMenuClick("encuestaInfo")} 
-            mr="2">
+            <Button
+              color={"white"}
+              variant="ghost"
+              onClick={() => handleMenuClick("encuestaInfo")}
+              mr="2"
+            >
               Encuesta-info
             </Button>
           </ListItem>
           <ListItem>
-            <Button 
-            color={"white"} 
-            variant="ghost" 
-            onClick={() => handleMenuClick("encuesta")} 
-            mr="2">
-              Encuesta
+            <Button
+              color={"white"}
+              variant="ghost"
+              onClick={() => handleMenuClick("encuesta")}
+              mr="2"
+            >
+              Crear Encuesta
             </Button>
           </ListItem>
         </List>
@@ -134,8 +139,8 @@ const Welcome = () => {
       <Box w="full" p={0} flex={2}>
         {currentSection === "mapa" && <MapLeaf />}
         {currentSection === "data" && <Data />}
-        {currentSection === "encuesta"  && <Encuesta />}
-        {currentSection === "encuestaInfo"  && <SurveyDetails />}
+        {currentSection === "encuesta" && <Encuesta />}
+        {currentSection === "encuestaInfo" && <SurveyDetails />}
       </Box>
 
       <Button

@@ -1,3 +1,5 @@
+import { Box, Flex, Text, Button } from "@chakra-ui/react";
+import { RiLinkM } from "react-icons/ri";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -8,9 +10,7 @@ const SurveyList = () => {
   useEffect(() => {
     const fetchSurveys = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:9090/api/v1/surveys"
-        );
+        const response = await axios.get("http://localhost:9090/api/v1/all");
         if (response.status === 200) {
           setSurveys(response.data);
         } else {
@@ -25,16 +25,59 @@ const SurveyList = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Lista de Encuestas</h1>
-      {surveys.map((survey) => (
-        <div key={survey.id}>
-          <h2>{survey.name}</h2>
-          <p>{survey.description}</p>
-          <Link to={`/survey/${survey.id}`}>Responder Encuesta</Link>
-        </div>
-      ))}
-    </div>
+    <Flex mt={16} flexDir={"column"} justify={"center"}>
+      <Text
+        fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+        as={"h2"}
+        color={"blue.800"}
+        fontWeight={"bold"}
+        px={{ base: 2, md: 5 }}
+      >
+        Lista de Encuestas
+      </Text>
+      <Flex
+        wrap={"wrap"}
+        p={2}
+        gap={4}
+        my={4}
+        align={"center"}
+        justify={"space-around"}
+        flexDir={{ base: "column", md: "row" }}
+      >
+        {surveys.map((survey) => (
+          <Box
+            maxW={{ base: "sm", xl: "xl" }}
+            w={"full"}
+            p={4}
+            bg={"blue.100"}
+            rounded={"lg"}
+            key={survey.id}
+          >
+            <Text
+              fontSize={{ base: "xl", md: "2xl" }}
+              mb={3}
+              border={2}
+              borderBottomColor={"blue.800"}
+              fontWeight={"bold"}
+              bg={"gray.100"}
+              py={6}
+              px={2}
+              textAlign={"center"}
+              color={"blue.800"}
+            >
+              {survey.name}
+            </Text>
+            <Text my={4} color={"blue.700"}>
+              Descripción: {survey.description}
+            </Text>
+            <Button gap={2}>
+              <Link to={`/survey/${survey.id}`}>Link Encuesta</Link>
+              <RiLinkM />
+            </Button>
+          </Box>
+        ))}
+      </Flex>
+    </Flex>
   );
 };
 

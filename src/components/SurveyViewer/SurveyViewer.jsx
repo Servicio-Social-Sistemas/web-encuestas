@@ -16,6 +16,7 @@ import {
 const SurveyViewer = () => {
   const [surveyData, setSurveyData] = useState(null);
   const [userResponses, setUserResponses] = useState({});
+  const [userPosition, setUserPosition] = useState(null);
 
   let { surveyId } = useParams();
 
@@ -43,27 +44,21 @@ const SurveyViewer = () => {
     fetchSurveyData();
   }, [surveyId]);
 
-  const handleResponseChange = (questionIndex, option) => {
-    setUserResponses((prevResponses) => {
-      const updatedResponses = { ...prevResponses };
-
-      if (!updatedResponses[questionIndex]) {
-        updatedResponses[questionIndex] = [];
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserPosition({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Error fetching user's position:", error);
       }
+    );
+  }, []);
 
-      if (updatedResponses[questionIndex].includes(option)) {
-        updatedResponses[questionIndex] = updatedResponses[
-          questionIndex
-        ].filter((response) => response !== option);
-      } else {
-        updatedResponses[questionIndex].push(option);
-      }
-
-      return updatedResponses;
-    });
-  };
-
-  const handleOpenEndedChange = (questionIndex, value) => {
+  const handleResponseChange = (questionIndex, response) => {
     setUserResponses((prevResponses) => ({
       ...prevResponses,
       [questionIndex]: value,
@@ -91,9 +86,15 @@ const SurveyViewer = () => {
       console.log("User Survey Responses:", userSurveyResponses);
 
       const response = await axios.post(
-        `${import.meta.env.VITE_PUBLIC_DATA}/save/${surveyId}`,
-        { responses: userSurveyResponses }
+        `${import.meta.env.VITE_PUBLIC_DATA}/submit/${surveyId}`,
+        {
+          surveyId: surveyId,
+          responses: userSurveyResponses,
+          location: userPosition,
+        }
       );
+
+      console;
 
       if (response.status === 200) {
         console.log("Respuestas guardadas exitosamente!");

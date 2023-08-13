@@ -16,6 +16,7 @@ import SurveyDetails from "./SurveyDetails";
 import { AuthContext } from "../context/AuthContext";
 import useProfile from "../hooks/useProfile";
 import { logout } from "../services/auth";
+import { Navigate } from "react-router-dom";
 
 const Welcome = () => {
   const [currentSection, setCurrentSection] = useState("mapa");
@@ -23,7 +24,9 @@ const Welcome = () => {
 
   const userProfile = useProfile();
 
-  const handleLogout = async () => await logout();
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const handleMenuClick = (section) => {
     setCurrentSection(section);

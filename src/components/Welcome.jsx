@@ -16,10 +16,10 @@ import SurveyDetails from "./SurveyDetails";
 import { AuthContext } from "../context/AuthContext";
 import useProfile from "../hooks/useProfile";
 import { logout } from "../services/auth";
-import { Navigate } from "react-router-dom";
+import SurveyList from "./SurveyViewer/SurveyList";
 
 const Welcome = () => {
-  const [currentSection, setCurrentSection] = useState("mapa");
+  const [currentSection, setCurrentSection] = useState("encuesta");
   const [showMenu, setShowMenu] = useState(false);
 
   const userProfile = useProfile();
@@ -121,7 +121,7 @@ const Welcome = () => {
               onClick={() => handleMenuClick("encuesta")}
               mr="2"
             >
-              Crear Encuesta
+              Encuestas
             </Button>
           </ListItem>
         </List>
@@ -139,7 +139,7 @@ const Welcome = () => {
       <Box w="full" p={0} flex={2}>
         {currentSection === "mapa" && <MapLeaf />}
         {currentSection === "data" && <Data />}
-        {currentSection === "encuesta" && <Encuesta />}
+        {currentSection === "encuesta" && <SurveyList />}
         {currentSection === "encuestaInfo" && <SurveyDetails />}
       </Box>
 

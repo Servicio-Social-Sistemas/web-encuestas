@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import {
   Box,
@@ -20,7 +21,7 @@ const SurveyViewer = () => {
 
   let { surveyId } = useParams();
 
-  console.log(surveyData);
+  console.log(surveyId);
 
   useEffect(() => {
     const fetchSurveyData = async () => {
@@ -58,7 +59,31 @@ const SurveyViewer = () => {
     );
   }, []);
 
-  const handleResponseChange = (questionIndex, response) => {
+  const handleResponseChange = (questionIndex, option) => {
+    setUserResponses((prevResponses) => {
+      const updatedResponses = { ...prevResponses };
+
+      if (!updatedResponses[questionIndex]) {
+        updatedResponses[questionIndex] = [];
+      }
+
+      if (surveyData.questions[questionIndex].type === "SINGLE_CHOICE") {
+        updatedResponses[questionIndex] = [option];
+      } else {
+        if (updatedResponses[questionIndex].includes(option)) {
+          updatedResponses[questionIndex] = updatedResponses[
+            questionIndex
+          ].filter((response) => response !== option);
+        } else {
+          updatedResponses[questionIndex].push(option);
+        }
+      }
+
+      return updatedResponses;
+    });
+  };
+
+  const handleInputResponseChange = (questionIndex, value) => {
     setUserResponses((prevResponses) => ({
       ...prevResponses,
       [questionIndex]: value,
@@ -94,15 +119,13 @@ const SurveyViewer = () => {
         }
       );
 
-      console;
-
       if (response.status === 200) {
-        console.log("Respuestas guardadas exitosamente!");
+        toast.success("Respuestas enviadas con éxito");
       } else {
         console.error("Error al guardar las respuestas:", response.statusText);
       }
     } catch (error) {
-      console.error("An error occurred:", error);
+      toast.error("An error occurred:", error);
     }
   };
 
@@ -132,7 +155,7 @@ const SurveyViewer = () => {
                 type="text"
                 value={userResponses[questionIndex] || ""}
                 onChange={(e) =>
-                  handleOpenEndedChange(questionIndex, e.target.value)
+                  handleInputResponseChange(questionIndex, e.target.value)
                 }
                 mt={2}
               />
@@ -161,6 +184,7 @@ const SurveyViewer = () => {
           Guardar Respuestas
         </Button>
       </Box>
+      <Toaster />
     </Flex>
   );
 };

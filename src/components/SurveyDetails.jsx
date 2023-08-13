@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom"; // Assuming you're using React Router for routing
+import { useParams } from "react-router-dom"; 
 import {
   Box,
   Heading,

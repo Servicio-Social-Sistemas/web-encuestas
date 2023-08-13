@@ -12,7 +12,7 @@ import {
 
 const SurveyCreator = () => {
   const [questions, setQuestions] = useState([{ question: "", type: "SINGLE_CHOICE", options: [] }]);
-  const [selectedType, setSelectedType] = useState("SINGLE_CHOICE"); // Selected question type
+  const [selectedType, setSelectedType] = useState("SINGLE_CHOICE"); 
   const [surveyName, setSurveyName] = useState("");
   const [surveyDescription, setSurveyDescription] = useState("");
 

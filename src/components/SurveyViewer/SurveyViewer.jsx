@@ -5,6 +5,7 @@ import axios from "axios";
 const SurveyViewer = () => {
   const [surveyData, setSurveyData] = useState(null);
   const [userResponses, setUserResponses] = useState({});
+  const [userPosition, setUserPosition] = useState(null); 
 
   let { surveyId } = useParams();
 
@@ -29,6 +30,20 @@ const SurveyViewer = () => {
 
     fetchSurveyData();
   }, [surveyId]);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserPosition({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Error fetching user's position:", error);
+      }
+    );
+  }, []);
 
   const handleResponseChange = (questionIndex, response) => {
     setUserResponses((prevResponses) => ({
@@ -56,9 +71,11 @@ const SurveyViewer = () => {
       );
 
       const response = await axios.post(
-        `http://localhost:9090/api/v1/save/${surveyId}`,
-        { responses: userSurveyResponses }
+        `http://localhost:3001/api/v1/submit/${surveyId}`,
+        { surveyId: surveyId,  responses: userSurveyResponses, location: userPosition }
       );
+
+      console
 
       if (response.status === 200) {
         console.log("Respuestas guardadas exitosamente!");

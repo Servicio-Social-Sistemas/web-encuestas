@@ -2,7 +2,6 @@ import { Box, Flex, Text, Button } from "@chakra-ui/react";
 import { RiLinkM } from "react-icons/ri";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 const SurveyList = () => {
   const [surveys, setSurveys] = useState([]);
@@ -10,9 +9,10 @@ const SurveyList = () => {
   useEffect(() => {
     const fetchSurveys = async () => {
       try {
-        const response = await axios.get("http://localhost:9090/api/v1/all");
-        if (response.status === 200) {
-          setSurveys(response.data);
+        const response = await fetch(`${import.meta.env.VITE_PUBLIC_DATA}/all`);
+        if (response.ok) {
+          const data = await response.json();
+          setSurveys(data);
         } else {
           console.error("Error fetching surveys:", response.statusText);
         }

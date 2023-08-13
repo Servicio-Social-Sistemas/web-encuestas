@@ -19,6 +19,8 @@ const SurveyViewer = () => {
 
   let { surveyId } = useParams();
 
+  console.log(surveyData);
+
   useEffect(() => {
     const fetchSurveyData = async () => {
       try {
@@ -89,7 +91,7 @@ const SurveyViewer = () => {
       console.log("User Survey Responses:", userSurveyResponses);
 
       const response = await axios.post(
-        `http://localhost:9090/api/v1/save/${surveyId}`,
+        `${import.meta.env.VITE_PUBLIC_DATA}/save/${surveyId}`,
         { responses: userSurveyResponses }
       );
 

@@ -8,12 +8,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "2.8.0",
-    "@emotion/react": "11.11.1",
-    "@emotion/styled": "11.11.0",
-    "@supabase/supabase-js": "^1.30.6",
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@supabase/supabase-js": "^1.30.0",
     "axios": "^1.4.0",
     "chart.js": "4.3.3",
+    "framer-motion": "^10.15.1",
     "leaflet": "1.9.4",
     "papaparse": "^5.4.1",
     "react": "18.2.0",
@@ -23,7 +24,7 @@
     "react-icons": "4.10.1",
     "react-leaflet": "4.2.1",
     "react-router-dom": "6.15.0",
-    "recharts": "^2.7.2"
+    "recharts": "^2.7.3"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "4.0.4",

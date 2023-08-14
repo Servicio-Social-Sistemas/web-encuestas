@@ -5,41 +5,34 @@ import { supabase } from "../api/config";
 
 export const AuthContext = createContext({
   user: null,
+  allowedRoutes: [],
 });
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
+  const allowedRoutes = ["/createsurvey", "/survey/:surveyId"];
+
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(async () => {
-      checkUser();
-    });
+    const { data: authListener } = supabase.auth.onAuthStateChange(async () =>
+      checkUser()
+    );
 
     const checkUser = async () => {
       const user = supabase.auth.user();
-      setUser(user);
-
-      const allowedRoutes = ["/createsurvey", "/survey/:surveyId"]; // Agrega aquí las rutas permitidas sin autenticación
-
-      if (!user) {
-        if (!allowedRoutes.includes(window.location.pathname)) {
-          navigate("/login", { replace: true });
-        }
+      if (user) {
+        setUser(user);
+        navigate("/", { replace: true });
       } else {
-        // Si el usuario está logueado y la ruta es /createsurvey, redireccionar a "/"
-        if (allowedRoutes.includes(window.location.pathname)) {
-          navigate("/", { replace: true });
-        }
+        navigate("/login", { replace: true });
       }
     };
-
     checkUser();
-
     return () => {
       authListener?.unsubscribe();
     };
-  }, [navigate]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>

@@ -90,7 +90,12 @@ const SurveyList = () => {
             </Text>
             <Flex justify={"space-between"}>
               <Button gap={2}>
-                <Link to={`/survey/${survey.id}`}>Link Encuesta</Link>
+                <Link
+                  to={`https://survey-view.netlify.app/survey/${survey.id}`}
+                  target="_blank"
+                >
+                  Link Encuesta
+                </Link>
                 <RiLinkM />
               </Button>
               <Button
@@ -98,6 +103,7 @@ const SurveyList = () => {
                 bg={"red.500"}
                 color={"white"}
                 fontWeight={"bold"}
+                _hover={{ bg: "red.300", color: "white" }}
                 onClick={() => handleDeleteSurver(survey.id)}
               >
                 <RiDeleteBin5Line />
@@ -106,6 +112,7 @@ const SurveyList = () => {
           </Box>
         ))}
       </Flex>
+      <Flex></Flex>
     </Flex>
   );
 };
